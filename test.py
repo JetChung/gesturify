@@ -5,7 +5,7 @@ import osascript
 import math
 import time
 
-fgbg = cv2.createBackgroundSubtractorMOG2()
+backSub = cv2.createBackgroundSubtractorKNN()
 
 
 def show_webcam():
@@ -24,9 +24,11 @@ def show_webcam():
         #img = cv2.subtract(img,background)
 
         #some preprocessing stuff
-        cv2.subtract(img,background)
-        img = cv2.flip(img, 1)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        img = backSub.apply(img)
+
+        img = cv2.flip(img, 1)
         img = cv2.GaussianBlur(img, (15, 15), 0)
 
 
@@ -59,6 +61,7 @@ def show_webcam():
             cv2.circle(img, extTop, 8, (255, 0, 0), -1)
             cv2.circle(img, extLeft, 8, (0, 0, 255), -1)
             cv2.circle(img, extBot, 8, (0, 127, 127), -1)
+
 
 
             dist = int(math.sqrt((extTop[0]-extRight[0])**2+(extTop[1]-extRight[1])**2))
