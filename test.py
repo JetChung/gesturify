@@ -3,8 +3,8 @@ import numpy
 import imutils
 import osascript
 import math
+import time
 
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
 fgbg = cv2.createBackgroundSubtractorMOG2()
 
 
@@ -12,15 +12,28 @@ def show_webcam():
     cam = cv2.VideoCapture(0)
     i = 0
     max_dist = 0
+    background = None
     while True:
         ret_val, img = cam.read()
+        if (background is None or i == 0):
+            time.sleep(.1)
+            ret_val, img = cam.read()
+            background = img
+
+        # working on background segmentation
+        #img = cv2.subtract(img,background)
 
         #some preprocessing stuff
+        cv2.subtract(img,background)
         img = cv2.flip(img, 1)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.GaussianBlur(img, (5, 5), 0)
-        thresh_value = 120
+        img = cv2.GaussianBlur(img, (15, 15), 0)
+
+
+        thresh_value = 127
+
         thresh = cv2.threshold(img, thresh_value, 255, cv2.THRESH_BINARY)[1]
+
         thresh = cv2.erode(thresh, None, iterations=2)
 
         thresh = cv2.dilate(thresh, None, iterations=2)
@@ -44,6 +57,8 @@ def show_webcam():
 
             cv2.circle(img, extRight, 8, (0, 255, 0), -1)
             cv2.circle(img, extTop, 8, (255, 0, 0), -1)
+            cv2.circle(img, extLeft, 8, (0, 0, 255), -1)
+            cv2.circle(img, extBot, 8, (0, 127, 127), -1)
 
 
             dist = int(math.sqrt((extTop[0]-extRight[0])**2+(extTop[1]-extRight[1])**2))
@@ -57,7 +72,7 @@ def show_webcam():
         cv2.imshow('img', img)
 
         i += 1
-        if i > 1000:
+        if i > 100:
             i = 0
         if cv2.waitKey(1) == 27:
             break  # esc to quit
