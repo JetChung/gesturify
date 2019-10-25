@@ -29,10 +29,10 @@ def show_webcam():
         img = backSub.apply(img)
 
         img = cv2.flip(img, 1)
-        img = cv2.GaussianBlur(img, (15, 15), 0)
+        img = cv2.GaussianBlur(img, (25, 25), 0)
 
 
-        thresh_value = 127
+        thresh_value = 50
 
         thresh = cv2.threshold(img, thresh_value, 255, cv2.THRESH_BINARY)[1]
 
