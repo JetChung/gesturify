@@ -1,4 +1,4 @@
-from sklearn import preprocessing
+import sklearn
 le = preprocessing.LabelEncoder()
 
 # First Feature

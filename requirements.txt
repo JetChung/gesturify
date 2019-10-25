@@ -1,5 +1,6 @@
 numpy
 opencv-python
+sklearn
 imutils
 osascript
-sklearn
+
