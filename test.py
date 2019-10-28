@@ -20,7 +20,7 @@ def show_webcam():
             background = img
 
         # working on background segmentation
-        #img = cv2.subtract(img,background)
+        #positive_images = cv2.subtract(positive_images,background)
 
         #some preprocessing stuff
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -71,7 +71,7 @@ def show_webcam():
 
 
 
-        cv2.imshow('img', img)
+        cv2.imshow('positive_images', img)
 
         i += 1
         if i > 100:
