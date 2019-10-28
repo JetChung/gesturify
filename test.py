@@ -1,7 +1,6 @@
 import cv2
 import numpy
 import imutils
-import osascript
 import math
 import time
 

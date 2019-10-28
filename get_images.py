@@ -19,7 +19,7 @@ while True:
         break
     elif k%256 == 32:
         # SPACE pressed
-        img_name = "img/opencv_frame_{}.png".format(img_counter)
+        img_name = "img_background/opencv_frame_{}.png".format(img_counter)
         cv2.imwrite(img_name, frame)
         print("{} written!".format(img_name))
         img_counter += 1
