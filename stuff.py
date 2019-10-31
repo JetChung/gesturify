@@ -1,6 +1,5 @@
 import handy
 import cv2
-import sklearn
 
 cap = cv2.VideoCapture(0)
 hist = handy.capture_histogram(source=0)
