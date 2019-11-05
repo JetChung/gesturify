@@ -12,6 +12,7 @@ def show_webcam():
     cam = cv2.VideoCapture(0)
     while True:
         ret_val, img = cam.read()
+        img = cv2.GaussianBlur(img, (35, 35), 0)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         fist_detect = fist.detectMultiScale(gray, 1.3, 5)
