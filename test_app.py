@@ -38,7 +38,7 @@ def show_webcam():
             try:
                 hand = handy.detect_hand(roi, hist)
                 for fingertip in hand.fingertips:
-                    fingertip = fingertip[0]-x+50, fingertip[1]-y+50
+                    fingertip = fingertip[0]+x-50, fingertip[1]+y-50
                     cv2.circle(roi, fingertip, 5, (0, 0, 255), -1)
                     cv2.imshow("Test", img)
 
