@@ -18,6 +18,8 @@ def show_webcam():
     gest1 = None #one frame ago
     gest2 = None #two frames ago
 
+    time = 0
+
     cam = cv2.VideoCapture(0)
     while True:
         ret_val, img = cam.read()
@@ -30,6 +32,7 @@ def show_webcam():
             img = cv2.putText(img, 'fist', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
             gest2 = gest1
             gest1 = "fist"
+            time = 5
 
 
 
@@ -40,11 +43,17 @@ def show_webcam():
             img = cv2.putText(img, 'palm', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
             gest2 = gest1
             gest1 = "palm"
+            time = 5
 
             roi = img[y:y + h, x:x + w]
 
         cv2.imshow("test", img)
 
+        if time <= 0:
+            gest1 = None
+            gest2 = None
+
+        time -= 1
 
         try:
             get_gesture(gest1, gest2)
