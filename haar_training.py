@@ -1,24 +1,55 @@
 import numpy as np
 import cv2
 import time
+import osascript
 
 
 def get_gesture(gest1, gest2):
     if gest1 == "fist" and gest2 == "palm":
-        print("closed")
+        osascript.osascript("""
+        tell application "Tunify"
+	        pause
+        end tell
+        """)
+
+
     elif (gest1 == "palm" and gest2 == "fist"):
-        print("open")
+        osascript.osascript("""
+            tell application "Tunify"
+        	    play
+            end tell
+            """)
+
     else:
-        pass
+        return None
+def get_control(x_0, y_0, x_1, y_1):
+
+    if (x_1 > 300 and x_1 < 900):
+        if (x_0 < 300):
+            print ("track back")
+        if (x_0 < 300):
+            print("track forward")
+
+    if (y_1 > 200 and y_1 < 500):
+        if (y_0 < 200):
+            print ("volume up")
+        if (y_0 < 500):
+            print("volume down ")
+
 
 def show_webcam():
     fist = cv2.CascadeClassifier('fist.xml')
     palm = cv2.CascadeClassifier('palm.xml')
 
-    gest1 = None #one frame ago
-    gest2 = None #two frames ago
+    gest1 = None # one frame ago
+    gest2 = None # two frames ago
 
-    time = 0
+    x_0 = 0
+    y_0 = 0
+    x_1 = 0
+    y_1 = 0
+
+    time0 = 0
 
     cam = cv2.VideoCapture(0)
     while True:
@@ -32,7 +63,11 @@ def show_webcam():
             img = cv2.putText(img, 'fist', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
             gest2 = gest1
             gest1 = "fist"
-            time = 5
+            time0 = 5
+
+            x_0 = x
+            y_0 = y
+            print("fist: ({}, {})".format(x,y))
 
 
 
@@ -43,27 +78,36 @@ def show_webcam():
             img = cv2.putText(img, 'palm', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
             gest2 = gest1
             gest1 = "palm"
-            time = 5
+            time0 = 5
+
+            x_0 = x
+            y_0 = y
+            print("palm: ({}, {})".format(x,y))
+
 
             roi = img[y:y + h, x:x + w]
 
-        cv2.imshow("test", img)
 
-        if time <= 0:
+        if time0 <= 0:
+            x_1 = x_0
+            y_1 = y_0
+
             gest1 = None
             gest2 = None
 
-        time -= 1
+        time0 -= 1
 
-        try:
-            get_gesture(gest1, gest2)
-        except:
-            pass
+
+        get_gesture(gest1, gest2)
+        get_control(x_0,y_0,x_1, y_1)
+
         if cv2.waitKey(1) == 27:
             break
-
+        cv2.imshow("test", img)
+        time.sleep(0.1)
 
     cv2.destroyAllWindows()
+
 
 
 def main():
