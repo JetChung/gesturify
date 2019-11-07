@@ -23,19 +23,20 @@ def get_gesture(gest1, gest2):
     else:
         return None
 def get_control(x_0, y_0, x_1, y_1):
+    try:
+        if (x_1 > 350 and x_1 < 750):
+            if (x_0 < 350):
+                print ("track forward")
+            if (x_0 > 750):
+                print("track back")
 
-    if (x_1 > 300 and x_1 < 900):
-        if (x_0 < 300):
-            print ("track back")
-        if (x_0 < 300):
-            print("track forward")
-
-    if (y_1 > 200 and y_1 < 500):
-        if (y_0 < 200):
-            print ("volume up")
-        if (y_0 < 500):
-            print("volume down ")
-
+        if (y_1 > 200 and y_1 < 400):
+            if (y_0 < 200):
+                print ("volume up")
+            if (y_0 > 400):
+                print("volume down ")
+    except:
+        pass
 
 def show_webcam():
     fist = cv2.CascadeClassifier('fist.xml')
@@ -91,8 +92,8 @@ def show_webcam():
 
 
         if time0 <= 0:
-            x_1 = None
-            y_1 = None
+            x_1 = 600
+            y_1 = 350
 
             gest1 = None
             gest2 = None
