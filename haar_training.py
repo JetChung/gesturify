@@ -44,10 +44,10 @@ def show_webcam():
     gest1 = None # one frame ago
     gest2 = None # two frames ago
 
-    x_0 = 0
-    y_0 = 0
-    x_1 = 0
-    y_1 = 0
+    x_0 = None
+    y_0 = None
+    x_1 = None
+    y_1 = None
 
     time0 = 0
 
@@ -64,8 +64,9 @@ def show_webcam():
             gest2 = gest1
             gest1 = "fist"
             time0 = 5
-
+            x_1 = x_0
             x_0 = x
+            y_1 = y_0
             y_0 = y
             print("fist: ({}, {})".format(x,y))
 
@@ -79,8 +80,9 @@ def show_webcam():
             gest2 = gest1
             gest1 = "palm"
             time0 = 5
-
+            x_1 = x_0
             x_0 = x
+            y_1 = y_0
             y_0 = y
             print("palm: ({}, {})".format(x,y))
 
@@ -89,8 +91,8 @@ def show_webcam():
 
 
         if time0 <= 0:
-            x_1 = x_0
-            y_1 = y_0
+            x_1 = None
+            y_1 = None
 
             gest1 = None
             gest2 = None
