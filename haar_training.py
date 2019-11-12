@@ -2,8 +2,6 @@ import numpy as np
 import cv2
 import time
 import osascript
-global cooldown
-cooldown = None
 
 def get_gesture(gest1, gest2):
     if gest1 == "fist" and gest2 == "palm":
@@ -12,36 +10,61 @@ def get_gesture(gest1, gest2):
 	        pause
         end tell
         """)
+        print("play")
 
 
     elif (gest1 == "palm" and gest2 == "fist"):
         osascript.osascript("""
             tell application "Tunify"
-        	    play
+        	    pause
             end tell
             """)
+        print("pause")
+
 
     else:
         return None
 
 
 def get_control(x_0, y_0, x_1, y_1):
+    print("x_0: {}, y_0: {}, x_1: {}, y_1: {}".format(x_0,y_0,x_1,y_1))
+    try:
+        if (x_1 > 350 and x_1 < 750):
+            if (x_0 < 350):
+                #osascript.osascript("""
+                 #                   tell application "Tunify"
+                #	                tell application "Tunify" to next track
+                 #                   end tell
+                  #                  """)
+                print("next")
 
-    if (x_1 > 300 and x_1 < 900):
-        if (x_0 < 300):
-            print ("track back")
-            cooldown = 10
-        if (x_0 < 300):
-            print("track forward")
-            cooldown = 10
+            if (x_0 > 750):
+                #osascript.osascript("""
+                 #                   tell application "Tunify"
+                  #                  tell application "Tunify" to previous track
+                   #                 end tell
+                    #                """)
+                print("back")
 
-    if (y_1 > 200 and y_1 < 500):
-        if (y_0 < 200):
-            print ("volume up")
-            cooldown = 10
-        if (y_0 < 500):
-            print("volume down ")
-            cooldown = 10
+    except:
+        pass
+
+    try:
+        if (y_1 > 300):
+            if (y_0 < 300 and int(osascript.osascript("output volume of (get volume settings)")[1]) < 50):
+                #osascript.osascript("""
+                 #               set volume output volume ((output volume of (get volume settings)) + 6.25)
+                  #              """)
+                print("volume up")
+
+        if (y_0 > 400):
+            #osascript.osascript("""
+            #                   set volume output volume ((output volume of (get volume settings)) - 6.25)
+            #                  """)
+            print("volume down")
+
+    except:
+        pass
 
 
 def show_webcam():
@@ -59,42 +82,39 @@ def show_webcam():
     time0 = 0
 
     cam = cv2.VideoCapture(0)
+    cooldown = 0
     while True:
+
         ret_val, img = cam.read()
         img = cv2.GaussianBlur(img, (15, 15), 0)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        if cooldown == 0:
-            fist_detect = fist.detectMultiScale(gray, 1.3, 5)
-            for (x, y, w, h) in fist_detect:
-                img = cv2.rectangle(img, (x-50, y-50), (x + w+50, y + h+50), (255, 0, 0), 2)
-                img = cv2.putText(img, 'fist', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
-                gest2 = gest1
-                gest1 = "fist"
-                time0 = 5
-                x_1 = x_0
-                x_0 = x
-                y_1 = y_0
-                y_0 = y
-                print("fist: ({}, {})".format(x,y))
+        fist_detect = fist.detectMultiScale(gray, 1.3, 5)
+        for (x, y, w, h) in fist_detect:
+            img = cv2.rectangle(img, (x-50, y-50), (x + w+50, y + h+50), (255, 0, 0), 2)
+            img = cv2.putText(img, 'fist', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
+            gest2 = gest1
+            gest1 = "fist"
+            time0 = 5
+            x_1 = x_0
+            x_0 = x
+            y_1 = y_0
+            y_0 = y
 
 
-        if cooldown == 0 :
-            palm_detect = palm.detectMultiScale(gray, 1.3, 5)
-            for (x, y, w, h) in palm_detect:
-                img = cv2.rectangle(img, (x-50, y-150), (x + w+50, y + h+150), (255, 0, 0), 2)
-                img = cv2.putText(img, 'palm', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
-                gest2 = gest1
-                gest1 = "palm"
-                time0 = 5
-                x_1 = x_0
-                x_0 = x
-                y_1 = y_0
-                y_0 = y
-                print("palm: ({}, {})".format(x,y))
+        palm_detect = palm.detectMultiScale(gray, 1.3, 5)
+        for (x, y, w, h) in palm_detect:
+            img = cv2.rectangle(img, (x-50, y-150), (x + w+50, y + h+150), (255, 0, 0), 2)
+            img = cv2.putText(img, 'palm', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
+            gest2 = gest1
+            gest1 = "palm"
+            time0 = 5
+            x_1 = x_0
+            x_0 = x
+            y_1 = y_0
+            y_0 = y
 
 
-                roi = img[y:y + h, x:x + w]
 
 
         if time0 <= 0:
@@ -105,7 +125,7 @@ def show_webcam():
             gest2 = None
 
         time0 -= 1
-        if cooldown > 0:
+        if cooldown != None and cooldown > 0:
           cooldown -=1
 
 
