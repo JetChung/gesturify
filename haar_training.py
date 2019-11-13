@@ -1,26 +1,24 @@
 import numpy as np
 import cv2
 import time
-import osascript
 
 def get_gesture(gest1, gest2):
     if gest1 == "fist" and gest2 == "palm":
-        osascript.osascript("""
-        tell application "Tunify"
-	        pause
-        end tell
-        """)
+        # osascript.osascript("""
+        # tell application "Tunify"
+	    #     pause
+        # end tell
+        # """)
         print("play")
 
 
     elif (gest1 == "palm" and gest2 == "fist"):
-        osascript.osascript("""
-            tell application "Tunify"
-        	    pause
-            end tell
-            """)
+        # osascript.osascript("""
+        #     tell application "Tunify"
+        # 	    pause
+        #     end tell
+        #     """)
         print("pause")
-
 
     else:
         return None
@@ -51,7 +49,8 @@ def get_control(x_0, y_0, x_1, y_1):
 
     try:
         if (y_1 > 300):
-            if (y_0 < 300 and int(osascript.osascript("output volume of (get volume settings)")[1]) < 50):
+            if (y_0 < 300):
+                    # and int(osascript.osascript("output volume of (get volume settings)")[1]) < 50):
                 #osascript.osascript("""
                  #               set volume output volume ((output volume of (get volume settings)) + 6.25)
                   #              """)
@@ -95,7 +94,7 @@ def show_webcam():
             img = cv2.putText(img, 'fist', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
             gest2 = gest1
             gest1 = "fist"
-            time0 = 5
+            time0 = 1.67
             x_1 = x_0
             x_0 = x
             y_1 = y_0
@@ -108,7 +107,7 @@ def show_webcam():
             img = cv2.putText(img, 'palm', (x,y+h), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),2)
             gest2 = gest1
             gest1 = "palm"
-            time0 = 5
+            time0 = 1.67
             x_1 = x_0
             x_0 = x
             y_1 = y_0
@@ -124,9 +123,9 @@ def show_webcam():
             gest1 = None
             gest2 = None
 
-        time0 -= 1
+        time0 -= .3
         if cooldown != None and cooldown > 0:
-          cooldown -=1
+          cooldown -= .3
 
 
         get_gesture(gest1, gest2)
@@ -135,8 +134,6 @@ def show_webcam():
         if cv2.waitKey(1) == 27:
             break
         cv2.imshow("test", img)
-        time.sleep(0.1)
-
     cv2.destroyAllWindows()
 
 
