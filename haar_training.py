@@ -10,7 +10,6 @@ def get_gesture(gest1, gest2):
         tell application "Tunify"
 	    pause
         end tell""")
-        print("play")
 
     elif (gest1 == "palm" and gest2 == "fist"):
         osascript.osascript("""
@@ -19,14 +18,12 @@ def get_gesture(gest1, gest2):
         end tell""")
 
 
-        print("pause")
 
     else:
         return None
 
 
 def get_control(x_0, y_0, x_1, y_1):
-    print("x_0: {}, y_0: {}, x_1: {}, y_1: {}".format(x_0, y_0, x_1, y_1))
     try:
         if (x_1 > 350 and x_1 < 750):
             if (x_0 < 350):
@@ -35,7 +32,6 @@ def get_control(x_0, y_0, x_1, y_1):
                                 tell application "Tunify" to next track
                                     end tell
                                     """)
-                print("next")
 
             if (x_0 > 750):
                 osascript.osascript("""
@@ -43,7 +39,6 @@ def get_control(x_0, y_0, x_1, y_1):
                                   tell application "Tunify" to previous track
                                     end tell
                                     """)
-                print("back")
 
     except:
         pass
@@ -54,13 +49,11 @@ def get_control(x_0, y_0, x_1, y_1):
                 osascript.osascript("""
                                 set volume output volume ((output volume of (get volume settings)) + 6.25)
                                 """)
-                print("volume up")
 
         if (y_0 > 400):
             osascript.osascript("""
                                set volume output volume ((output volume of (get volume settings)) - 6.25)
                               """)
-            print("volume down")
 
     except:
         pass
