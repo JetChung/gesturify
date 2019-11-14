@@ -6,11 +6,17 @@ import osascript
 
 def get_gesture(gest1, gest2):
     if gest1 == "fist" and gest2 == "palm":
-        osascript.osascript("""tell application "Tunify" pause end tell""")
+        osascript.osascript("""
+        tell application "Tunify"
+	    pause
+        end tell""")
         print("play")
 
     elif (gest1 == "palm" and gest2 == "fist"):
-        osascript.osascript("""tell application "Tunify" pause end tell """)
+        osascript.osascript("""
+        tell application "Tunify"
+	    play
+        end tell""")
 
 
         print("pause")
